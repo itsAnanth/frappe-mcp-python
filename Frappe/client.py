@@ -18,7 +18,6 @@ class FrappeClient:
         self.session = requests.Session()
         
     def login(self, username, password):
-        print(username, password)
         r = self.session.post(self.url, data={
             'cmd': 'login',
             'usr': username,
@@ -26,7 +25,6 @@ class FrappeClient:
         }, verify=True, headers=self.headers)
 
         if r.json().get('message') == "Logged In":
-            print(f"Authenticated to {self.url} with User {username}")
       
             return r.json()
         else:
@@ -39,9 +37,8 @@ class FrappeClient:
             "Authorization": f"token {token}"
         }) 
         
-        print(f"Authenticated to {self.url} with API key {self.api_key}")
         
-    def get_doc(self, doctype, name="", filters=None, fields=None):
+    def get_doc(self, doctype, name=None, filters=None, fields=None):
         '''Returns a single remote document
 
         :param doctype: DocType of the document to be returned
@@ -54,9 +51,11 @@ class FrappeClient:
         if fields:
             params["fields"] = json.dumps(fields)
 
-        resource_url = f"{self.url}/api/resource/{doctype}/{name}"
-        print(f"sending request to {resource_url}")
+        resource_url = f"{self.url}/api/resource/{doctype}"
+        if name:
+            resource_url += f"/{name}"
         res = self.session.get(resource_url, params=params)
+        print(res.url)
         return self.post_process(res)
     
         
@@ -66,6 +65,8 @@ class FrappeClient:
         except ValueError:
             print(response.text)
             raise
+        
+        print(rjson)
 
         if rjson and ('exc' in rjson) and rjson['exc']:
             raise FrappeException(rjson['exc'])

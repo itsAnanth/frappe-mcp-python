@@ -13,4 +13,5 @@ client = FrappeClient(
 # client.authenticate()
 client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
 
-print(client.get_doc('ToDo', filters={"name": "lffovcblli"}))
+# print(client.get_doc('ToDo', filters={"name": "lffovcblli"}))
+print(client.get_doc('ToDo'))

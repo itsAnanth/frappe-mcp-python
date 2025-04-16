@@ -1,17 +1,35 @@
-from typing import Any
-import httpx
 from mcp.server.fastmcp import FastMCP
+from Frappe.client import FrappeClient
+import os
+from dotenv import load_dotenv
 
-mcp = FastMCP(
-    name="frappe-mcp-server",
+load_dotenv()
+
+frappe_client = FrappeClient(
+    url="https://crm.axilume.com/",
+    api_key=os.environ.get("API_KEY"),
+    api_secret=os.environ.get("API_SECRET"),
 )
 
-@mcp.tool()
-def get_forecast(state: str) -> str:
-    """Get the weather forecast for a given state in India."""
-    return f"Weather forecast for {state} is very good!"
+frappe_client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
 
+server = FastMCP(
+    name="frappe-mcp-server"
+)
+
+server.add_tool(
+    frappe_client.get_doc,
+    name="get_document",
+    description=(
+        "Get a document from Frappe"
+        "Parameters: \n"
+        " - doctype: DocType of the document to be returned\n"
+        " - name: (optional) `name` of the document to be returned\n"
+        " - filters: (optional) Filter by this dict if name is not set\n"
+        " - fields: (optional) Fields to be returned, will return everything if not set\n"    
+    )
+)
 
 if __name__ == "__main__":
-    print("Hello from frappe-mcp-python!")
-    mcp.run(transport='stdio')
+    print("running")
+    server.run(transport='stdio')
