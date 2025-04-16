@@ -9,10 +9,8 @@ class FrappeException(Exception):
     pass
 
 class FrappeClient:
-    def __init__(self, url: str, api_key: str, api_secret: str):
+    def __init__(self, url: str):
         self.url = url.rstrip('/')
-        self.api_key = api_key
-        self.api_secret = api_secret
         self.headers = dict(Accept='application/json')
         
         self.session = requests.Session()
@@ -30,15 +28,15 @@ class FrappeClient:
         else:
             raise FrappeAuthError
        
-    def authenticate(self):
-        auth = f"{self.api_key}:{self.api_secret}"
+    def authenticate(self, api_key, api_secret):
+        auth = f"{api_key}:{api_secret}"
         token = base64.b64encode(auth.encode()).decode()
         self.session.headers.update({
             "Authorization": f"token {token}"
         }) 
         
         
-    def get_doc(self, doctype, name=None, filters=None, fields=None):
+    def get_doc(self, doctype=None, name=None, filters=None, fields=None):
         '''Returns a single remote document
 
         :param doctype: DocType of the document to be returned
@@ -66,13 +64,13 @@ class FrappeClient:
             print(response.text)
             raise
         
-        print(rjson)
 
         if rjson and ('exc' in rjson) and rjson['exc']:
-            raise FrappeException(rjson['exc'])
+            return f"{rjson['exc_type']} Doctype data not found"
+            # raise FrappeException(rjson['exc'])
         if 'message' in rjson:
             return rjson['message']
         elif 'data' in rjson:
             return rjson['data']
         else:
-            return None
+            return f"Doctype data not found"
