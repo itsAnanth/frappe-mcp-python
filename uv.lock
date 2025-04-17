@@ -137,18 +137,22 @@ source = { virtual = "." }
 dependencies = [
     { name = "anthropic" },
     { name = "httpx" },
+    { name = "mariadb" },
     { name = "mcp", extra = ["cli"] },
     { name = "pytest" },
     { name = "requests" },
+    { name = "sqlparse" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.49.0" },
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "mariadb", specifier = ">=1.1.12" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.6.0" },
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "requests", specifier = ">=2.32.3" },
+    { name = "sqlparse", specifier = ">=0.5.3" },
 ]
 
 [[package]]
@@ -260,6 +264,23 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/78/0f/77a63ca7aa5fed9a1b9135af57e190d905bcd3702b36aca46a01090d39ad/jiter-0.9.0-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:f0b2827fb88dda2cbecbbc3e596ef08d69bda06c6f57930aec8e79505dc17001", size = 317281 },
     { url = "https://files.pythonhosted.org/packages/f9/39/a3a1571712c2bf6ec4c657f0d66da114a63a2e32b7e4eb8e0b83295ee034/jiter-0.9.0-cp313-cp313t-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:062b756ceb1d40b0b28f326cba26cfd575a4918415b036464a52f08632731e5a", size = 350273 },
     { url = "https://files.pythonhosted.org/packages/ee/47/3729f00f35a696e68da15d64eb9283c330e776f3b5789bac7f2c0c4df209/jiter-0.9.0-cp313-cp313t-win_amd64.whl", hash = "sha256:6f7838bc467ab7e8ef9f387bd6de195c43bad82a569c1699cb822f6609dd4cdf", size = 206867 },
+]
+
+[[package]]
+name = "mariadb"
+version = "1.1.12"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/17/bb/4bbc803fbdafedbfba015f7cc1ab1e87a6d1de36725ba058c53e2f8a45ad/mariadb-1.1.12.tar.gz", hash = "sha256:50b02ff2c78b1b4f4628a054e3c8c7dd92972137727a5cc309a64c9ed20c878c", size = 85934 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0a/14/e71871b0e60d1f72868bf206487f610825a078568593997c654e475ea96e/mariadb-1.1.12-cp311-cp311-win32.whl", hash = "sha256:e3ce7c47be58897822d07f119461b2aa6aa41a53f3505bec517b14fc6c3611a6", size = 184291 },
+    { url = "https://files.pythonhosted.org/packages/28/4c/3878b9a3fc1f3d5ecc4a43a295b1345142e1bbd3744690b58bdf6eabfc9b/mariadb-1.1.12-cp311-cp311-win_amd64.whl", hash = "sha256:5ae99af48ba92e3e2edad1dcda293f352c1b65e335007943b9def4cdde622fab", size = 201255 },
+    { url = "https://files.pythonhosted.org/packages/cc/d5/62a2de8ec78b6735346499b4d3a1c9ddc1e1449a4776f17fa65207a2dc82/mariadb-1.1.12-cp312-cp312-win32.whl", hash = "sha256:194045d2f59b2c9100dad210dbd8ba3008120f8a434e792dae15b711e5449022", size = 184393 },
+    { url = "https://files.pythonhosted.org/packages/2e/06/0dcad420b4afca7b3a9a96d75a4ddbb9a3e8e7787cbc5db499344dd13ff8/mariadb-1.1.12-cp312-cp312-win_amd64.whl", hash = "sha256:dd9d0ca112eb670dfa99a2fb7c4398bcc2a8c452dbf5507a8e4b5c4ae991bb2a", size = 201268 },
+    { url = "https://files.pythonhosted.org/packages/2b/1b/b6eca3870ac1b5577a10d3b49ba42ac263c2e5718c9224cc1c8463940422/mariadb-1.1.12-cp313-cp313-win32.whl", hash = "sha256:ba43c42130d41352f32a5786c339cc931d05472ef7640fa3764d428dc294b88e", size = 184338 },
+    { url = "https://files.pythonhosted.org/packages/fb/ff/c29a543ee1f9009755bc304138f61cd9b0ee1f14533e446513f84ccf143a/mariadb-1.1.12-cp313-cp313-win_amd64.whl", hash = "sha256:b69bc18418e72fcf359d17736cdc3f601a271203aff13ef7c57a415c8fd52ab0", size = 201272 },
 ]
 
 [[package]]
@@ -496,6 +517,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a2/87/a6771e1546d97e7e041b6ae58d80074f81b7d5121207425c964ddf5cfdbd/sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc", size = 20372 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e9/44/75a9c9421471a6c4805dbf2356f7c181a29c1879239abab1ea2cc8f38b40/sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2", size = 10235 },
+]
+
+[[package]]
+name = "sqlparse"
+version = "0.5.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/40/edede8dd6977b0d3da179a342c198ed100dd2aba4be081861ee5911e4da4/sqlparse-0.5.3.tar.gz", hash = "sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272", size = 84999 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a9/5c/bfd6bd0bf979426d405cc6e71eceb8701b148b16c21d2dc3c261efc61c7b/sqlparse-0.5.3-py3-none-any.whl", hash = "sha256:cf2196ed3418f3ba5de6af7e82c694a9fbdbfecccdfc72e281548517081f16ca", size = 44415 },
 ]
 
 [[package]]
