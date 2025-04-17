@@ -8,6 +8,12 @@ class FrappeAuthError(Exception):
 class FrappeException(Exception):
     pass
 
+
+class ExceptionMessages:
+    DOCTYPE_NOT_FOUND = "Doctype data not found"
+    AUTHENTICATION_FAILED = "Authentication failed"
+    
+
 class FrappeClient:
     def __init__(self, url: str):
         self.url = url.rstrip('/')
@@ -43,6 +49,7 @@ class FrappeClient:
         :param name: (optional) `name` of the document to be returned
         :param filters: (optional) Filter by this dict if name is not set
         :param fields: (optional) Fields to be returned, will return everythign if not set'''
+        
         params = {}
         if filters:
             params["filters"] = json.dumps(filters)
@@ -64,13 +71,12 @@ class FrappeClient:
             print(response.text)
             raise
         
-
+        print(rjson)
         if rjson and ('exc' in rjson) and rjson['exc']:
             return f"{rjson['exc_type']} Doctype data not found"
-            # raise FrappeException(rjson['exc'])
         if 'message' in rjson:
             return rjson['message']
         elif 'data' in rjson:
             return rjson['data']
         else:
-            return f"Doctype data not found"
+            return ExceptionMessages.DOCTYPE_NOT_FOUND
