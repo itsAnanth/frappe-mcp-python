@@ -16,9 +16,7 @@ logger = logging.getLogger("frappe-mcp-server")
 
 # frappe client
 frappe_client = FrappeClient(
-    url="https://crm.axilume.com/",
-    api_key=os.environ.get("API_KEY"),
-    api_secret=os.environ.get("API_SECRET"),
+    url="https://crm.axilume.com/"
 )
 frappe_client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
 app = Server("frapper-mcp-server")
