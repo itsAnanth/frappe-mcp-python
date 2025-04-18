@@ -4,6 +4,14 @@ from Frappe.client import FrappeClient
 from dotenv import load_dotenv
 from mcp.server import Server
 from tools import register_tools
+import logging
+
+from mcp.server import (
+    Server
+)
+
+from Frappe.client import FrappeClient
+from db.client import DBClient
 
 
 
@@ -18,15 +26,29 @@ logger = logging.getLogger("frappe-mcp-server")
 frappe_client = FrappeClient(
     url="https://crm.axilume.com/"
 )
+
+db_client = DBClient(
+    host=os.environ.get("DB_HOST"),
+    username=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASS"),
+    database=os.environ.get("DB_DATABASE")
+)
+
 frappe_client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
+
+requires = {
+    "frappe_client": frappe_client,
+    "db_client": db_client
+}
+
 app = Server("frapper-mcp-server")
 
 
 
 async def main():
-    register_tools(app, frappe_client)
-    # Import here to avoid issues with event loops
+    await register_tools(app, requires)
     from mcp.server.stdio import stdio_server
+    logger.info("[SERVER MANAGER] launching server")
 
     async with stdio_server() as (read_stream, write_stream):
         await app.run(
@@ -34,7 +56,6 @@ async def main():
             write_stream,
             app.create_initialization_options()
         )
-        logger.info("[SERVER MANAGER] launched server")
         
 if __name__ == "__main__":
     import asyncio
