@@ -17,7 +17,7 @@ from Frappe.client import FrappeClient
 from pydantic import ValidationError
 
 
-def register_tools(app: Server, frappe_client: FrappeClient) -> None:
+async def register_tools(app: Server, requires) -> None:
     logger = logging.getLogger("frappe-mcp-server")
     logger.info("[TOOL MANAGER] Registering tools...")
     tools_map = {}
@@ -57,8 +57,8 @@ def register_tools(app: Server, frappe_client: FrappeClient) -> None:
         except ValidationError as e:
             raise ValueError(f"Invalid code arguments: {e}") from e
 
-        result = tool['tool_function'](frappe_client, arguments.dict())
-        logger.info(f"Execution: {result}")
+        required = [requires[require] for require in tool['requires'] if require in requires.keys()]
+        result = tool['tool_function'](*required, arguments.dict())
 
 
         return result

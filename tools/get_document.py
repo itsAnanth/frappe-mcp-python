@@ -31,6 +31,7 @@ def get_document(frappe_client, arguments) -> Sequence[TextContent | ImageConten
     ]
 
 exports = {
+    "requires": ["frappe_client"],
     "tool_name": "get_document",
     "tool_schema": ToolSchema,
     "tool_description": "Get a document from Frappe knowledge base",
