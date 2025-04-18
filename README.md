@@ -1,7 +1,37 @@
-dev
+# Installation
 
-npx @modelcontextprotocol/inspector uv --directory "D:\internship\frappe-mcp-python" run main2.py
+`git clone https://github.com/itsAnanth/frappe-mcp-python`
 
-mcp dev main2.py
+`cd frappe-mcp-python`
 
---directory "D:\internship\frappe-mcp-python" run main2.py
+`uv sync`
+
+# Add Config file to Claude
+
+`%appdata%/claude/claude_desktop_config.json`
+
+```
+{
+  "mcpServers": {
+    "frappe-mcp-server": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "D:\\internship\\frappe-mcp-python",
+        "run",
+        "main2.py"
+      ]
+    }
+  }
+}
+
+```
+
+
+# Launch Server
+
+`uv run main2.py`
+
+
+
+
