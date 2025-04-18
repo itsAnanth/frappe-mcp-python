@@ -4,7 +4,12 @@ import sqlparse
 from sqlparse.tokens import Keyword, DML, Whitespace
 import logging
 from contextlib import closing
+from tabulate import tabulate
+from pydantic import BaseModel
 
+class QueryExecutionResult(BaseModel):
+    status: bool
+    result: list[dict] | str | None
 
 
 logger = logging.getLogger("frappe-mcp-server")
@@ -82,20 +87,32 @@ class DBClient:
         print("connected")
         return conn
     
-    def execute_query(self, query: str):
+    def execute_query(self, query: str, tabulate_output=True) -> QueryExecutionResult:
         
         # Check if the query is read-only
         if not self.is_read_only(query):
-            print("Query is not read-only")
-            return None
+            return QueryExecutionResult(
+                status=False,
+                result=None
+            )
     
         with closing(self.get_connection()) as conn:
             cursor = conn.cursor()
             try:
                 cursor.execute(query)
                 result = cursor.fetchall()
-                return result
+                columns = [desc[0] for desc in cursor.description]
+                formatted_output = [dict(zip(columns, row)) for row in result]
+                tabulated_output = tabulate(formatted_output, headers="keys", tablefmt="psql")
+                
+                return QueryExecutionResult(
+                    status=True,
+                    result=tabulated_output if tabulate_output else formatted_output
+                )
+                
             except mariadb.Error as e:
-                print(f"Error executing query: {e}")
-                return None
+                return QueryExecutionResult(
+                    status=False,
+                    result=f"Error executing query: {e}"
+                )
             
