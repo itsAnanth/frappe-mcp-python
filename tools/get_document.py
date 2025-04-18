@@ -21,7 +21,7 @@ class ToolSchema(BaseModel):
     name: Optional[str] = Field(None, description="The optional name of the document to retrieved")
 
 def get_document(frappe_client, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
-    result = frappe_client.get_doc(**arguments)
+    status, result = frappe_client.get_doc(**arguments)
     
     return [
         TextContent(
