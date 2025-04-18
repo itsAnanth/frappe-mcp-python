@@ -93,7 +93,7 @@ class DBClient:
         if not self.is_read_only(query):
             return QueryExecutionResult(
                 status=False,
-                result=None
+                result="Query is not read-only. Execution aborted."
             )
     
         with closing(self.get_connection()) as conn:

@@ -16,12 +16,12 @@ class ToolSchema(BaseModel):
 
 
 def query_database(db_client: DBClient, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
-    status, result = db_client.execute_query(arguments['query'])
+    output = db_client.execute_query(arguments['query'])
     
     return [
         TextContent(
             type="text",
-            text=json.dumps(result, indent=2)
+            text=output.result
         )
     ]
 
