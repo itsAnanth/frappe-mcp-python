@@ -71,12 +71,11 @@ class FrappeClient:
             print(response.text)
             raise
         
-        print(rjson)
         if rjson and ('exc' in rjson) and rjson['exc']:
-            return f"{rjson['exc_type']} Doctype data not found"
+            return False, f"{rjson['exc_type']} Doctype data not found"
         if 'message' in rjson:
-            return rjson['message']
+            return True, rjson['message']
         elif 'data' in rjson:
-            return rjson['data']
+            return True, rjson['data']
         else:
-            return ExceptionMessages.DOCTYPE_NOT_FOUND
+            return False, ExceptionMessages.DOCTYPE_NOT_FOUND
