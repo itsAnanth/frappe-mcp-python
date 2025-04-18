@@ -34,7 +34,7 @@ db_client = DBClient(
     database=os.environ.get("DB_DATABASE")
 )
 
-frappe_client.authenticate(os.environ.get("API_KEY"), os.environ.get("API_SECRET"))
+frappe_client.authenticate(os.environ.get("MCP_API_KEY"), os.environ.get("MCP_API_SECRET"))
 # frappe_client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
 
 requires = {
