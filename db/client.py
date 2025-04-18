@@ -13,7 +13,7 @@ class QueryExecutionResult(BaseModel):
 
 
 logger = logging.getLogger("frappe-mcp-server")
-logging.basicConfig(level=logging.DEBUG)
+
 class DBClient:
     
     def __init__(self, host: str, username: str, password: str, database: str):
@@ -23,12 +23,16 @@ class DBClient:
         self.database = database
         self.READ_ONLY_KEYWORDS = ("SELECT", "SHOW", "DESCRIBE", "DESC", "EXPLAIN")
         
+    def clean_query(self, query: str) -> str:
+        # remove comments and whitespace
+        cleaned = sqlparse.format(query, strip_comments=True, strip_whitespace=True, strip_newlines=True)
+        return cleaned
         
     def is_read_only(self, query: str) -> str:
+        cleaned = self.clean_query(query)
         # only allow readonly keywords
         READ_ONLY_KEYWORDS = ("SELECT", "SHOW", "DESCRIBE", "DESC", "EXPLAIN")
         
-        cleaned = sqlparse.format(query, strip_comments=True, strip_whitespace=True, strip_newlines=True)
         statements = sqlparse.parse(cleaned)
         
         logger.debug(f"Cleaned query: {cleaned}")
@@ -89,6 +93,8 @@ class DBClient:
     
     def execute_query(self, query: str, tabulate_output=True) -> QueryExecutionResult:
         
+        query = self.clean_query(query)
+        logger.debug("Cleaned query: %s", query)
         # Check if the query is read-only
         if not self.is_read_only(query):
             return QueryExecutionResult(
@@ -97,6 +103,12 @@ class DBClient:
             )
     
         with closing(self.get_connection()) as conn:
+            if not conn:
+                return QueryExecutionResult(
+                    status=False,
+                    result="Failed to establish a database connection."
+                )
+
             cursor = conn.cursor()
             try:
                 cursor.execute(query)
