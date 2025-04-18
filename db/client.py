@@ -6,6 +6,7 @@ import logging
 from contextlib import closing
 from tabulate import tabulate
 from pydantic import BaseModel
+import pandas as pd
 
 class QueryExecutionResult(BaseModel):
     status: bool
@@ -117,9 +118,12 @@ class DBClient:
                 formatted_output = [dict(zip(columns, row)) for row in result]
                 tabulated_output = tabulate(formatted_output, headers="keys", tablefmt="psql")
                 
+                df = pd.DataFrame(result, columns=columns)
+                json_output = df.to_json(orient='records', date_format='iso')
+                
                 return QueryExecutionResult(
                     status=True,
-                    result=tabulated_output if tabulate_output else formatted_output
+                    result=tabulated_output if tabulate_output else json_output
                 )
                 
             except mariadb.Error as e:

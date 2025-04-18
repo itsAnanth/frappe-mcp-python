@@ -7,6 +7,8 @@ from mcp.types import (
 )
 from collections.abc import Sequence
 from db.client import DBClient
+import json
+from datetime import datetime, date
 
 
 class ToolSchema(BaseModel):
@@ -17,10 +19,16 @@ def query_database(db_client: DBClient, arguments) -> Sequence[TextContent | Ima
     output = db_client.execute_query(arguments['query'], tabulate_output=False)
     
     
+    def json_serial(obj):
+        """JSON serializer for objects not serializable by default"""
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        raise TypeError(f"Type {type(obj)} not serializable")
+    
     return [
         TextContent(
             type="text",
-            text=output.result
+            text=json.dumps(output.result, indent=2, default=json_serial)
         )
     ]
 
