@@ -36,6 +36,6 @@ exports = {
     "requires": ["db_client"],
     "tool_name": "query_database",
     "tool_schema": ToolSchema,
-    "tool_description": "Execute a single Read-Only SQL query on the database",
+    "tool_description": "Execute a single Read-Only SQL query on the database\nGives output in JSON format as an array of objects\nEach object is a row in the result set\nEach key in the object is a column name\nEach value in the object is the value of the column for that row",
     "tool_function": query_database
 }
