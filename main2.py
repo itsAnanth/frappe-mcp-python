@@ -24,7 +24,7 @@ logger = logging.getLogger("frappe-mcp-server")
 
 # frappe client
 frappe_client = FrappeClient(
-    url="https://crm.axilume.com/"
+    url=os.environ.get("API_URL"),
 )
 
 db_client = DBClient(
@@ -34,7 +34,8 @@ db_client = DBClient(
     database=os.environ.get("DB_DATABASE")
 )
 
-frappe_client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
+frappe_client.authenticate(os.environ.get("API_KEY"), os.environ.get("API_SECRET"))
+# frappe_client.login(os.environ.get("API_USERNAME"), os.environ.get("API_PASSWORD"))
 
 requires = {
     "frappe_client": frappe_client,

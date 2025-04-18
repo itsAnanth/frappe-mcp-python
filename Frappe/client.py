@@ -36,9 +36,9 @@ class FrappeClient:
        
     def authenticate(self, api_key, api_secret):
         auth = f"{api_key}:{api_secret}"
-        token = base64.b64encode(auth.encode()).decode()
+        # token = base64.b64encode(auth.encode()).decode()
         self.session.headers.update({
-            "Authorization": f"token {token}"
+            "Authorization": f"token {auth}"
         }) 
         
         
@@ -72,7 +72,7 @@ class FrappeClient:
             raise
         
         if rjson and ('exc' in rjson) and rjson['exc']:
-            return False, f"{rjson['exc_type']} Doctype data not found"
+            return False, f"{rjson['exc_type']}"
         if 'message' in rjson:
             return True, rjson['message']
         elif 'data' in rjson:
