@@ -33,5 +33,7 @@
 `uv run main2.py`
 
 
+# Launch Test Server
 
+`mcp dev main2.py`
 
