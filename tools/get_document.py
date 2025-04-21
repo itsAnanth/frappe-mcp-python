@@ -21,6 +21,9 @@ class ToolSchema(BaseModel):
     name: Optional[str] = Field(None, description="The optional name of the document to retrieved")
 
 def get_document(frappe_client, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+    """
+        Get a document from Frappe knowledge base
+    """
     status, result = frappe_client.get_doc(**arguments)
     
     return [
@@ -31,9 +34,8 @@ def get_document(frappe_client, arguments) -> Sequence[TextContent | ImageConten
     ]
 
 exports = {
+    "tool": get_document,
     "requires": ["frappe_client"],
-    "tool_name": "get_document",
     "tool_schema": ToolSchema,
-    "tool_description": "Get a document from Frappe knowledge base",
-    "tool_function": get_document
+
 }
