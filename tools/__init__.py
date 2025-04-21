@@ -27,9 +27,18 @@ async def register_tools(app: Server, requires) -> None:
             continue
         module_name = file.stem
         module = __import__(f"tools.{module_name}", fromlist=["*"])
+        
         if hasattr(module, "exports"):
-            tools_map[module.exports['tool_name']] = module.exports 
-            logger.info(f'[TOOL MANAGER] {module.exports["tool_name"]} registered')
+            tool = module.exports['tool']
+            
+            tool_data = {
+                'tool_description': tool.__doc__,
+                'tool_schema': module.exports['tool_schema'],
+                'tool_name': tool.__name__
+            }
+            
+            tools_map[tool.__name__] = tool_data
+            logger.info(f'[TOOL MANAGER] {tool_data["tool_name"]} registered')
 
     logger.info(f"[TOOL MANAGER] Loaded {len(tools_map)} tools")
     
