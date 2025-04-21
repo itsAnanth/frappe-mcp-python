@@ -16,11 +16,14 @@ class FilterCondition(BaseModel):
     value: str = Field(..., description="The value to compare against, e.g., '%John Doe%'")
 
 class ToolSchema(BaseModel):
-    name: str = Field(None, description="The name of the employee to retrieved")
+    name: str = Field(..., description="The name of the employee to retrieved")
     filters: Optional[List[FilterCondition]] = Field(None, description="List of optional filter conditions")
     fields: Optional[List[str]] = Field(None, description="List of optional fields to retrieve")
 
 def get_employee(frappe_client: FrappeClient, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+    """
+        Get details of an employee from Frappe knowledge base
+    """
     status, result = frappe_client.get_doc(
         doctype="Employee",
         filters=[
@@ -48,9 +51,7 @@ def get_employee(frappe_client: FrappeClient, arguments) -> Sequence[TextContent
     ]
 
 exports = {
+    "tool": get_employee,
     "requires": ["frappe_client"],
-    "tool_name": "get_employee",
     "tool_schema": ToolSchema,
-    "tool_description": "Get details of an employee from Frappe knowledge base",
-    "tool_function": get_employee
 }
