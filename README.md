@@ -37,3 +37,9 @@
 
 `mcp dev main2.py`
 
+Run the dev server with configuration:
+
+- transport type: `stdio`
+- command: `uv`
+- arguments: `--directory "D:\internship\frappe-mcp-python" run main2.py`
+
