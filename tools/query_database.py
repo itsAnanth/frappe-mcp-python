@@ -16,6 +16,14 @@ class ToolSchema(BaseModel):
 
 
 def query_database(db_client: DBClient, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+    """
+        Execute a single Read-Only SQL query on the database
+        Gives output in JSON format as an array of objects
+        Each object is a row in the result set
+        Each key in the object is a column name
+        Each value in the object is the value of the column for that row
+    """    
+
     output = db_client.execute_query(arguments['query'], tabulate_output=False)
     
     
@@ -33,9 +41,7 @@ def query_database(db_client: DBClient, arguments) -> Sequence[TextContent | Ima
     ]
 
 exports = {
+    "tool": query_database,
     "requires": ["db_client"],
-    "tool_name": "query_database",
     "tool_schema": ToolSchema,
-    "tool_description": "Execute a single Read-Only SQL query on the database\nGives output in JSON format as an array of objects\nEach object is a row in the result set\nEach key in the object is a column name\nEach value in the object is the value of the column for that row",
-    "tool_function": query_database
 }
