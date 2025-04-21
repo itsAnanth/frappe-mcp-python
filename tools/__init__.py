@@ -32,9 +32,11 @@ async def register_tools(app: Server, requires) -> None:
             tool = module.exports['tool']
             
             tool_data = {
+                'tool': tool,
                 'tool_description': tool.__doc__,
                 'tool_schema': module.exports['tool_schema'],
-                'tool_name': tool.__name__
+                'tool_name': tool.__name__,
+                'requires': module.exports['requires']
             }
             
             tools_map[tool.__name__] = tool_data
@@ -67,7 +69,7 @@ async def register_tools(app: Server, requires) -> None:
             raise ValueError(f"Invalid code arguments: {e}") from e
 
         required = [requires[require] for require in tool['requires'] if require in requires.keys()]
-        result = tool['tool_function'](*required, arguments.dict())
+        result = tool['tool'](*required, arguments.dict())
 
 
         return result
