@@ -10,7 +10,7 @@
 
 ### Add Config file to Claude
 
-`%appdata%/claude/claude_desktop_config.json`
+Windows: `%appdata%/claude/claude_desktop_config.json`
 
 ```
 {
