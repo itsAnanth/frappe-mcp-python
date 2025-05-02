@@ -9,6 +9,7 @@ from mcp.types import (
 from collections.abc import Sequence
 from Frappe.client import FrappeClient
 import json
+from main import frappe_client, db_client
 
 class FilterCondition(BaseModel):
     field: str = Field(..., description="The field to filter on, e.g., 'description'")
@@ -20,15 +21,15 @@ class ToolSchema(BaseModel):
     filters: Optional[List[FilterCondition]] = Field(None, description="List of optional filter conditions")
     fields: Optional[List[str]] = Field(None, description="List of optional fields to retrieve")
 
-def get_employee(frappe_client: FrappeClient, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+async def get_employee(arguments: ToolSchema) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
     """
         Get details of an employee from Frappe knowledge base
     """
     status, result = frappe_client.get_doc(
         doctype="Employee",
         filters=[
-            ["employee_name", "like", f"%{arguments['name']}%"],
-            *(arguments['filters'] if arguments['filters'] else []),
+            ["employee_name", "like", f"%{arguments.name}%"],
+            *(arguments.filters if arguments.filters else []),
         ],
     )
     
