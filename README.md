@@ -21,7 +21,7 @@
         "--directory",
         "D:\\internship\\frappe-mcp-python",
         "run",
-        "main2.py"
+        "main.py"
       ]
     }
   }
@@ -32,18 +32,18 @@
 
 ### Launch Server
 
-`uv run main2.py`
+`uv run main.py`
 
 
 ### Launch Test Server
 
-`mcp dev main2.py`
+`mcp dev main.py`
 
 Run the dev server with configuration:
 
 - transport type: `stdio`
 - command: `uv`
-- arguments: `--directory "D:\internship\frappe-mcp-python" run main2.py`
+- arguments: `--directory "D:\internship\frappe-mcp-python" run main.py`
 
 
 ## Adding New Tools
