@@ -8,6 +8,7 @@ from mcp.types import (
 )
 from collections.abc import Sequence
 import json
+from main import db_client, frappe_client
 
 class FilterCondition(BaseModel):
     field: str = Field(..., description="The field to filter on, e.g., 'description'")
@@ -20,11 +21,11 @@ class ToolSchema(BaseModel):
     fields: Optional[List[str]] = Field(None, description="List of optional fields to retrieve")
     name: Optional[str] = Field(None, description="The optional name of the document to retrieved")
 
-def get_document(frappe_client, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+async def get_document(arguments: ToolSchema) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
     """
         Get a document from Frappe knowledge base
     """
-    status, result = frappe_client.get_doc(**arguments)
+    status, result = frappe_client.get_doc(**arguments.dict())
     
     return [
         TextContent(
