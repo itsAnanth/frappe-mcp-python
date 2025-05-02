@@ -8,9 +8,9 @@
 
 `uv sync`
 
-### Add Config file to Claude
+### Add Config file to Claude Desktop
 
-`%appdata%/claude/claude_desktop_config.json`
+Windows: `%appdata%/claude/claude_desktop_config.json`
 
 ```
 {
