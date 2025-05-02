@@ -2,16 +2,14 @@ import os
 import logging
 from Frappe.client import FrappeClient
 from dotenv import load_dotenv
-from mcp.server import Server
 from tools import register_tools
 import logging
 
-from mcp.server import (
-    Server
-)
 
 from Frappe.client import FrappeClient
 from db.client import DBClient
+
+from fastmcp import FastMCP
 
 
 
@@ -42,22 +40,17 @@ requires = {
     "db_client": db_client
 }
 
-app = Server("frapper-mcp-server")
+app = FastMCP("frapper-mcp-server")
 
 
 
-async def main():
-    await register_tools(app, requires)
-    from mcp.server.stdio import stdio_server
+def main():
+    register_tools(app, requires)
     logger.info("[SERVER MANAGER] launching server")
 
-    async with stdio_server() as (read_stream, write_stream):
-        await app.run(
-            read_stream,
-            write_stream,
-            app.create_initialization_options()
-        )
+    app.run()
         
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()
+
+__all__ = ['frappe_client', 'db_client']
