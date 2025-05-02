@@ -9,15 +9,12 @@ from mcp.types import (
     EmbeddedResource,
 )
 
-from mcp.server import (
-    Server
-)
-
+from fastmcp import FastMCP
 from Frappe.client import FrappeClient
 from pydantic import ValidationError
 
 
-async def register_tools(app: Server, requires) -> None:
+def register_tools(app: FastMCP, requires) -> None:
     logger = logging.getLogger("frappe-mcp-server")
     logger.info("[TOOL MANAGER] Registering tools...")
     tools_map = {}
@@ -40,39 +37,15 @@ async def register_tools(app: Server, requires) -> None:
             }
             
             tools_map[tool.__name__] = tool_data
+            
+            app.tool()(tool)
+            
             logger.info(f'[TOOL MANAGER] {tool_data["tool_name"]} registered')
+            
+            
 
     logger.info(f"[TOOL MANAGER] Loaded {len(tools_map)} tools")
     
-    @app.list_tools()
-    async def list_tools() -> list[Tool]:
-        logger.info("[TOOL MANAGER] Listing tools")
-        """List available tools."""
-        return [
-            Tool(
-                name=key,
-                description=value['tool_description'],
-                inputSchema=value['tool_schema'].model_json_schema()
-            ) for key, value in tools_map.items()
-        ]
-
-    @app.call_tool()
-    async def call_tool(name: str, arguments: Any) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
-        """Handle tool calls."""
-        if name not in tools_map.keys():
-            raise ValueError(f"Unknown tool: {name}")
-
-        tool = tools_map[name]
-        try:
-            arguments = tool['tool_schema'].model_validate(arguments)
-        except ValidationError as e:
-            raise ValueError(f"Invalid code arguments: {e}") from e
-
-        required = [requires[require] for require in tool['requires'] if require in requires.keys()]
-        result = tool['tool'](*required, arguments.dict())
-
-
-        return result
     
     
 __all__ = [
