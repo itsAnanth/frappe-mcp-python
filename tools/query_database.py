@@ -9,13 +9,13 @@ from collections.abc import Sequence
 from db.client import DBClient
 import json
 from datetime import datetime, date
-
+from main import db_client
 
 class ToolSchema(BaseModel):
     query: str = Field(..., description="A single SQL query to execute\nMust be a read-only query\nMust be a valid SQL query\nMulti Statement queries are not supported\nExample: 'SELECT * FROM tabEmployee'") 
 
 
-def query_database(db_client: DBClient, arguments) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+async def query_database(arguments: ToolSchema) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
     """
         Execute a single Read-Only SQL query on the database
         Gives output in JSON format as an array of objects
@@ -24,19 +24,13 @@ def query_database(db_client: DBClient, arguments) -> Sequence[TextContent | Ima
         Each value in the object is the value of the column for that row
     """    
 
-    output = db_client.execute_query(arguments['query'], tabulate_output=False)
+    output = db_client.execute_query(arguments.query, tabulate_output=False)
     
-    
-    def json_serial(obj):
-        """JSON serializer for objects not serializable by default"""
-        if isinstance(obj, (datetime, date)):
-            return obj.isoformat()
-        raise TypeError(f"Type {type(obj)} not serializable")
     
     return [
         TextContent(
             type="text",
-            text=json.dumps(output.result, indent=2, default=json_serial)
+            text=json.dumps(output.result, indent=2)
         )
     ]
 
